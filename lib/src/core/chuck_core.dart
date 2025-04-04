@@ -90,11 +90,6 @@ class ChuckCore {
       macOS: initializationSettingsIOS,
       android: initializationSettingsAndroid,
       linux: LinuxInitializationSettings(defaultActionName: 'default'),
-      windows: WindowsInitializationSettings(
-        appName: "Chuck interceptor",
-        appUserModelId: "uz.dev.chuck_interceptor",
-        guid: 'd49b0314-ee7a-4626-bf79-97cdb8a991bb',
-      ),
     );
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,

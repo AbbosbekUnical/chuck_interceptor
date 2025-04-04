@@ -24,8 +24,7 @@ class ChuckCore {
   final bool darkTheme;
 
   /// Rx subject which contains all intercepted http calls
-  final BehaviorSubject<List<ChuckHttpCall>> callsSubject =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<ChuckHttpCall>> callsSubject = BehaviorSubject.seeded([]);
 
   /// Icon url for notification
   final String notificationIcon;
@@ -84,14 +83,18 @@ class ChuckCore {
 
   void _initializeNotificationsPlugin() {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid =
-        AndroidInitializationSettings(notificationIcon);
+    final initializationSettingsAndroid = AndroidInitializationSettings(notificationIcon);
     const initializationSettingsIOS = DarwinInitializationSettings();
     final initializationSettings = InitializationSettings(
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsIOS,
       android: initializationSettingsAndroid,
       linux: LinuxInitializationSettings(defaultActionName: 'default'),
+      windows: WindowsInitializationSettings(
+        appName: "Chuck interceptor",
+        appUserModelId: "uz.dev.chuck_interceptor",
+        guid: 'd49b0314-ee7a-4626-bf79-97cdb8a991bb',
+      ),
     );
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -102,8 +105,7 @@ class ChuckCore {
   void _onCallsChanged() async {
     if (callsSubject.value.isNotEmpty) {
       _notificationMessage = _getNotificationMessage();
-      if (_notificationMessage != _notificationMessageShown &&
-          !_notificationProcessing) {
+      if (_notificationMessage != _notificationMessageShown && !_notificationProcessing) {
         await _showLocalNotification();
         _onCallsChanged();
       }
@@ -140,30 +142,23 @@ class ChuckCore {
     final List<ChuckHttpCall> calls = callsSubject.value;
     final int successCalls = calls
         .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 200 &&
-            call.response!.status! < 300)
+            call.response != null && call.response!.status! >= 200 && call.response!.status! < 300)
         .toList()
         .length;
 
     final int redirectCalls = calls
         .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 300 &&
-            call.response!.status! < 400)
+            call.response != null && call.response!.status! >= 300 && call.response!.status! < 400)
         .toList()
         .length;
 
     final int errorCalls = calls
         .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 400 &&
-            call.response!.status! < 600)
+            call.response != null && call.response!.status! >= 400 && call.response!.status! < 600)
         .toList()
         .length;
 
-    final int loadingCalls =
-        calls.where((call) => call.loading).toList().length;
+    final int loadingCalls = calls.where((call) => call.loading).toList().length;
 
     final StringBuffer notificationsMessage = StringBuffer();
     if (loadingCalls > 0) {
@@ -183,8 +178,8 @@ class ChuckCore {
     }
     String notificationMessageString = notificationsMessage.toString();
     if (notificationMessageString.endsWith(" | ")) {
-      notificationMessageString = notificationMessageString.substring(
-          0, notificationMessageString.length - 3);
+      notificationMessageString =
+          notificationMessageString.substring(0, notificationMessageString.length - 3);
     }
 
     return notificationMessageString;
@@ -227,8 +222,7 @@ class ChuckCore {
     if (callsCount >= maxCallsCount) {
       final originalCalls = callsSubject.value;
       final calls = List<ChuckHttpCall>.from(originalCalls);
-      calls.sort(
-          (call1, call2) => call1.createdTime.compareTo(call2.createdTime));
+      calls.sort((call1, call2) => call1.createdTime.compareTo(call2.createdTime));
       final indexToReplace = originalCalls.indexOf(calls.first);
       originalCalls[indexToReplace] = call;
 
@@ -261,8 +255,8 @@ class ChuckCore {
     }
     selectedCall.loading = false;
     selectedCall.response = response;
-    selectedCall.duration = response.time.millisecondsSinceEpoch -
-        selectedCall.request!.time.millisecondsSinceEpoch;
+    selectedCall.duration =
+        response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
 
     callsSubject.add([...callsSubject.value]);
   }

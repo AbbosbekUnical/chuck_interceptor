@@ -85,11 +85,18 @@ class ChuckCore {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final initializationSettingsAndroid = AndroidInitializationSettings(notificationIcon);
     const initializationSettingsIOS = DarwinInitializationSettings();
+    final WindowsInitializationSettings initializationSettingsWindows =
+        WindowsInitializationSettings(
+            appName: 'Flutter Local Notifications Example',
+            appUserModelId: 'Com.Dexterous.FlutterLocalNotificationsExample',
+            // Search online for GUID generators to make your own
+            guid: 'd49b0314-ee7a-4626-bf79-97cdb8a991bb');
     final initializationSettings = InitializationSettings(
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsIOS,
       android: initializationSettingsAndroid,
       linux: LinuxInitializationSettings(defaultActionName: 'default'),
+      windows: initializationSettingsWindows,
     );
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,

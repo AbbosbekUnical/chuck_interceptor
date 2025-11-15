@@ -23,6 +23,14 @@ class ChuckCallDetailsScreen extends StatefulWidget {
 class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with SingleTickerProviderStateMixin {
   ChuckHttpCall get call => widget.call;
 
+  late TabController tabController;
+
+  @override
+  void initState() {
+    tabController = TabController(length: 5, vsync: this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) => StreamBuilder<List<ChuckHttpCall>>(
     stream: widget.core.callsSubject,
@@ -57,10 +65,11 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
       ),
       appBar: AppBar(
         centerTitle: false,
-        bottom: const TabBar(
+        bottom: TabBar(
+          controller: tabController,
           tabAlignment: TabAlignment.fill,
           indicatorColor: ChuckConstants.lightRed,
-          tabs: [
+          tabs: const [
             Tab(icon: Icon(Icons.info_outline), text: 'Overview'),
             Tab(icon: Icon(Icons.arrow_upward), text: 'Request'),
             Tab(icon: Icon(Icons.arrow_downward), text: 'Response'),
@@ -71,6 +80,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
         title: const Text('Chuck - HTTP Call Details'),
       ),
       body: TabBarView(
+        controller: tabController,
         children: [
           ChuckCallOverviewWidget(widget.call),
           ChuckCallRequestWidget(widget.call),

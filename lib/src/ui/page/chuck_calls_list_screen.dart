@@ -87,6 +87,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
 
   Widget _buildMenuButton() => PopupMenuButton<ChuckMenuItem>(
     onSelected: _onMenuItemSelected,
+    iconColor: Theme.of(context).iconTheme.color,
     itemBuilder: (BuildContext context) => _menuItems
         .map(
           (ChuckMenuItem item) => PopupMenuItem<ChuckMenuItem>(

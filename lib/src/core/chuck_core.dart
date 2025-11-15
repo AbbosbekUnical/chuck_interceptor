@@ -92,6 +92,12 @@ class ChuckCore {
       macOS: initializationSettingsIOS,
       android: initializationSettingsAndroid,
       linux: const LinuxInitializationSettings(defaultActionName: 'default'),
+      windows: const WindowsInitializationSettings(
+        appName: 'Flutter Local Notifications Example',
+        appUserModelId: 'uz.shs.chuck_example',
+        // Search online for GUID generators to make your own
+        guid: '6f475524-7c3b-407e-9584-2823c83a1757',
+      ),
     );
     unawaited(
       _flutterLocalNotificationsPlugin.initialize(
